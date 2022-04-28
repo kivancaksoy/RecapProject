@@ -1,4 +1,5 @@
 ﻿using Business.Concrete;
+using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
 using System;
@@ -9,55 +10,25 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
-            CarManager carManager = new CarManager(new InMemoryCarDal());
+            CarManager carManager = new CarManager(new EfCarDal());
+            //Car car1 = new Car() { BrandId = 4, CarName = "PEUGEOT 301", ColorId = 2, DailyPrice = 250, ModelYear = 2018};
 
-            Car car1 = new Car() { Id = 8, BrandId = 3, ColorId = 2, ModelYear = 2020, DailyPrice = 350, Description = "Volkswagen Golf" };
-            Car car2 = new Car() { Id = 9, BrandId = 5, ColorId = 4, ModelYear = 2020, DailyPrice = 300, Description = "Fiat Egea" };
+            //Car car1 = new Car() { BrandId = 1, CarName = "BMW 5.20", ColorId = 1, DailyPrice = 1500, ModelYear = 2018, Description = "Full kaskolu" };
+            //Car car2 = new Car() { BrandId = 4, CarName = "PEUGEOT 301", ColorId = 2, DailyPrice = 250, ModelYear = 2018, Description = "Full kaskolu" };
+            //carManager.Add(car1);
+            //carManager.Add(car2);
+            //carManager.Update(car1);
+            //foreach (var car in carManager.GetAll())
+            //{
+            //    Console.WriteLine(car.Id + " : " + car.CarName + " - " + car.ModelYear + " model" + " Günlük ücret : " + car.DailyPrice + " - " + car.Description);
+            //}
 
-            //car1 update için car3 oluşturuldu.
-            Car car3 = new Car() { Id = 8, BrandId = 3, ColorId = 2, ModelYear = 2020, DailyPrice = 325, Description = "Volkswagen Golf" };
+            //carManager.Delete(car1);
 
 
-            Console.WriteLine("\n----------GetAll-----------\n");
-
-            foreach (var car in carManager.GetAll())
+            foreach (var car in carManager.GetCarsByBrandId(1))
             {
-                Console.WriteLine("Id : " + car.Id + " - " + car.Description + " - Daily Price : " + car.DailyPrice);
-            }
-
-            Console.WriteLine("\n-----------Add----------\n");
-
-            carManager.Add(car1);
-            carManager.Add(car2);
-
-            foreach (var car in carManager.GetAll())
-            {
-                Console.WriteLine("Id : " + car.Id + " - " + car.Description + " - Daily Price : " + car.DailyPrice);
-            }
-
-            Console.WriteLine("\n-----------Update----------\n");
-
-            carManager.Update(car3);
-
-            foreach (var car in carManager.GetAll())
-            {
-                Console.WriteLine("Id : " + car.Id + " - " + car.Description + " - Daily Price : " + car.DailyPrice);
-            }
-
-            Console.WriteLine("\n-----------Delete----------\n");
-
-            carManager.Delete(car2);
-
-            foreach (var car in carManager.GetAll())
-            {
-                Console.WriteLine("Id : " + car.Id + " - " + car.Description + " - Daily Price : " + car.DailyPrice);
-            }
-
-            Console.WriteLine("\n-----------GetById (BrandId) ----------\n");
-
-            foreach (var car in carManager.GetById(1))
-            {
-                Console.WriteLine("Id : " + car.Id + " - " + car.Description + " - Daily Price : " + car.DailyPrice);
+                Console.WriteLine(car.CarName);
             }
         }
     }

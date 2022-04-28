@@ -20,14 +20,20 @@ namespace Business.Concrete
 
         public void Add(Car car)
         {
-            _carDal.Add(car);
-            Console.WriteLine("Yeni araba eklendi : " + car.Description);
+            if (car.CarName.Length > 1 && car.DailyPrice > 0)
+            {
+                _carDal.Add(car);
+            }
+            else
+            {
+                Console.WriteLine("Araba eklenemedi : " + car.CarName);
+            }
         }
 
         public void Delete(Car car)
         {
             _carDal.Delete(car);
-            Console.WriteLine("Araba silindi : " + car.Description);
+            Console.WriteLine("Araba silindi : " + car.CarName);
         }
 
         public List<Car> GetAll()
@@ -35,15 +41,25 @@ namespace Business.Concrete
             return _carDal.GetAll();
         }
 
-        public List<Car> GetById(int BrandId)
+        public List<Car> GetById(int id)
         {
-            return _carDal.GetById(BrandId);
+            return _carDal.GetAll(c => c.Id == id);
+        }
+
+        public List<Car> GetCarsByBrandId(int brandId)
+        {
+            return _carDal.GetAll(c => c.BrandId == brandId);
+        }
+
+        public List<Car> GetCarsByColorId(int colorId)
+        {
+            return _carDal.GetAll(c => c.ColorId == colorId);
         }
 
         public void Update(Car car)
         {
             _carDal.Update(car);
-            Console.WriteLine("Araba güncellendi : " + car.Description);
+            Console.WriteLine("Araba güncellendi : " + car.CarName);
         }
     }
 }

@@ -2,6 +2,7 @@
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -25,17 +26,11 @@ namespace Business.Concrete
         [ValidationAspect(typeof(RentalValidator))]
         public IResult Add(Rental rental)
         {
-            
-            if (_rentalDal.IsThereAnyItem(r => r.CarId == rental.CarId))
+            IResult result = BusinessRules.Run(CheckIfReturnDateNull(rental.CarId));
+            if (result != null)
             {
-
-                if (_rentalDal.GetLastElement(r => r.CarId == rental.CarId, r2 => r2.Id).ReturnDate == null)
-                {
-                    return new ErrorResult(Messages.ReturnDateIsNull);
-                }
-
+                return result;
             }
-
             //rental.RentDate = DateTime.Now;
             _rentalDal.Add(rental);
             return new SuccessResult(Messages.RentalAdded);
@@ -57,10 +52,23 @@ namespace Business.Concrete
             return new SuccessDataResult<Rental>(_rentalDal.Get(r => r.Id == rentalId), Messages.RentalListed);
         }
 
+        [ValidationAspect(typeof(RentalValidator))]
         public IResult Update(Rental rental)
         {
             _rentalDal.Update(rental);
             return new SuccessResult(Messages.RentalUpdated);
+        }
+
+
+        //Business rules
+        private IResult CheckIfReturnDateNull(int carId)
+        {
+            var result = _rentalDal.GetAll(r => r.CarId == carId).Any(r => r.ReturnDate == null);
+            if (result)
+            {
+                return new ErrorResult(Messages.ReturnDateIsNull);
+            }
+            return new SuccessResult();
         }
     }
 }
